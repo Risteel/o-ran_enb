@@ -1,0 +1,7 @@
+.cproject
+.project
+.vscode/
+
+# documentation
+.tox
+docs/_build/

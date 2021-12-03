@@ -1,0 +1,22 @@
+{
+    "container-rules": {
+        "excluded-modules": [],
+        "excluded-features": ["faults-status"]
+    },
+
+    "supervisor-rules": {
+        "netopeer": {
+            "path": "/usr/local/bin/netopeer2-server",
+            "args": ["-d", "-v2"],
+            "autorestart": true,
+            "stdout": "log/netopeer-stdout.log",
+            "stderr": "log/netopeer-stderr.log"
+        },
+    
+        "ntsim-manager": {
+            "path": "/opt/dev/ntsim-ng/ntsim-ng",
+            "args": ["-w/opt/dev/ntsim-ng", "-m"],
+            "nomanual": true
+        }
+    }
+}
