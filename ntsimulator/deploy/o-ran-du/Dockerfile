@@ -28,13 +28,15 @@ COPY ./mqtt_sub.py /opt/dev/workspace/mqtt_sub.py
 
 # ntsim-ng init docker
 RUN /opt/dev/ntsim-ng/ntsim-ng --container-init -w /opt/dev/ntsim-ng
+RUN pip3 install --upgrade setuptools
 RUN pip3 install paho-mqtt
 RUN pip3 install requests
+RUN pip3 install -U watchdog
 RUN mkdir /opt/dev/workspace/o-ran-enb
 
 COPY ./event-settings_send.json /opt/dev/workspace/o-ran-enb/event-settings_send.json
 COPY ./event-settings_no_send.json /opt/dev/workspace/o-ran-enb/event-settings_no_send.json
-
+COPY ./ue_net_switch_to_cellular.sh /opt/dev/workspace/ue_net_switch_to_cellular.sh
 # finishing container build
 ARG BUILD_DATE
 LABEL build-date=$BUILD_DATE

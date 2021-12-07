@@ -17,7 +17,7 @@
 #### BUILDER ####
 #################
 
-FROM ubuntu:20.04 as builder
+FROM ubuntu:18.04 as builder
 LABEL maintainer="alexandru.stancu@highstreet-technologies.com / adrian.lita@highstreet-technologies.com"
 
 RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
@@ -151,10 +151,11 @@ COPY ./deploy/base/generate-ssh-keys.sh /home/netconf/.ssh/generate-ssh-keys.sh
 #############################
 
 
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 LABEL maintainer="alexandru.stancu@highstreet-technologies.com / adrian.lita@highstreet-technologies.com"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
     psmisc \
     unzip \
     openssl \
@@ -165,7 +166,47 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     && rm -rf /var/lib/apt/lists/*
-    
+
+RUN add-apt-repository ppa:bladerf/bladerf && \
+add-apt-repository -y ppa:myriadrf/drivers
+
+RUN apt-get update -y --allow-unauthenticated && \
+	apt-get install -y cmake \
+	git \
+	libzmq3-dev \
+	libtool-bin \
+	libfftw3-dev \
+	libmbedtls-dev \
+	libboost-program-options-dev \
+	libconfig++-dev \
+	libsctp-dev \
+	g++ \
+	iputils-ping \
+	vim \
+    tmux \
+	libbladerf1 \
+	libbladerf2 \
+	libbladerf-dev \
+	libbladerf-udev \
+	autoconf  \
+	automake \
+	net-tools \
+    libnetfilter-queue-dev \
+    iptables
+
+#install srsRAN
+COPY ./srsran_oenb-master /opt/dev/srsran_oenb-master/
+RUN mkdir /opt/dev/srsran_oenb-master/build
+WORKDIR /opt/dev/srsran_oenb-master/build
+RUN cmake ../ && make -j2 && make install && ldconfig
+RUN ./srsran_install_configs.sh service
+# netfilterqueue & scapy
+#RUN pip3 install netfilterqueue scapy
+# pycrate & CryptoMobile
+#RUN pip3 install git+https://github.com/P1sec/pycrate git+https://github.com/P1sec/CryptoMobile
+
+WORKDIR /
+
 ARG BUILD_WITH_DEBUG
 ENV BUILD_WITH_DEBUG=${BUILD_WITH_DEBUG}
 RUN if [ -n "${BUILD_WITH_DEBUG}" ]; then DEBIAN_FRONTEND="noninteractive" apt-get install -y gdb valgrind nano mc && unset BUILD_WITH_DEBUG; fi
@@ -184,7 +225,7 @@ COPY --from=builder /etc/sysrepo /etc/sysrepo
 RUN ldconfig
 
 # use /opt/dev as working directory
-RUN mkdir /opt/dev
+#RUN mkdir /opt/dev
 WORKDIR /opt/dev
 
 # copy common NTS yang models

@@ -4,16 +4,16 @@
 		"choosing-method" : "linear",
 		"faults" : [
 			{
-				"condition" : "Send SIB12",
-				"object" : "Connlab",
-				"severity" : "CRITICAL",
+				"condition" : "172.16.0.2",
+				"object" : "DoS",
+				"severity" : "MAJOR",
 				"date-time" : "$$time$$",
-				"specific-problem" : "Send SIB12",
+				"specific-problem" : "172.16.0.2",
 
-				"fault-severity" : "CRITICAL",
+				"fault-severity" : "MAJOR",
 				"affected-object" : "%%object%%",
 				"cleared" : "false",
-				"text" : "Send SIB12"
+				"text" : "172.16.0.2"
 			}
 		]
 	}

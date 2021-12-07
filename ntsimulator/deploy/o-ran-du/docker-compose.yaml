@@ -61,9 +61,19 @@ x-nf: &common_nf
 services:
   ntsim-ng-o-enb:
     <<: *common_nf
-    container_name: o-eNB
+    container_name: srsRAN_o-eNB
     hostname: o-eNB
     build: .
+    ports:
+       - "2002:2002/tcp"
+    #command: >
+    #   sh -c "route add -host 10.7.1.2 eth0; /bin/bash"
+    networks:
+      default:
+      ran01:
+        ipv4_address: 10.6.1.2
+      ue01:
+        ipv4_address: 10.8.1.2
     volumes:
         - ./config.json:/opt/dev/ntsim-ng/config/config.json
         - ./config_fault.json:/opt/dev/ntsim-ng/config/config_fault.json
@@ -72,7 +82,76 @@ services:
     environment:
         <<: *common_env
         <<: *du_env
+    tty: true
+    stdin_open: true
+    privileged: true
+
+  srsue:
+    hostname: srsue
+    container_name: srsue01
+    build: .
+    ports:
+       - "2004:2004/tcp"
+    networks:
+      ue01:
+        ipv4_address: 10.8.1.4
+    tty: true
+    stdin_open: true
+    privileged: true
+  srsepc:
+    hostname: srsepc
+    container_name: srsepc01
+    build: .
+    ports:
+       - "2003:2003/tcp"
+    command: >
+       sh -c "route add -host 10.6.1.2 eth0 &&
+              route del default &&
+              route add default gw 10.9.1.1 &&
+              iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE; /bin/bash"
+    networks:
+      default:
+      core01:
+        ipv4_address: 10.7.1.2
+      sgi01:
+        ipv4_address: 10.9.1.2
+      sgi02:
+        ipv4_address: 10.9.2.2
+    tty: true
+    stdin_open: true
+    privileged: true
+
 networks:
-    default:
-        external:
-            name: oam
+  default:
+    external:
+      name: oam
+  core01:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.7.1.0/24
+  ran01:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.6.1.0/24
+  ue01:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.8.1.0/24
+  sgi01:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.9.1.0/24
+  sgi02:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.9.2.0/24
