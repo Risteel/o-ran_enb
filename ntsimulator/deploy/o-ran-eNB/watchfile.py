@@ -11,8 +11,8 @@ from watchdog.events import *
 from watchdog.observers import Observer
 home = expanduser("~")
 
-# base = 'https://sdnc-web:8453'
-base = 'https://192.168.60.158:8453'
+base = 'https://sdnc-web:8453'
+#base = 'https://192.168.60.158:8453'
 #base = 'https://oranyyds.connectivity.tw'
 username = 'admin'
 password = 'Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U'
