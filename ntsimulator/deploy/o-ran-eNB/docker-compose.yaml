@@ -29,7 +29,7 @@ x-common_env: &common_env
     NTS_HOST_TRANSFER_SFTP_BASE_PORT: ${NTS_HOST_TRANSFER_SFTP_BASE_PORT}
     
     SDN_CONTROLLER_PROTOCOL: ${SDN_CONTROLLER_PROTOCOL}
-    SDN_CONTROLLER_IP: ${SDNC_OAM_IPv6}
+    SDN_CONTROLLER_IP: ${SDNC_OAM_IPv4}
     SDN_CONTROLLER_PORT: ${SDNC_REST_PORT}
     SDN_CONTROLLER_CALLHOME_PORT: ${SDN_CONTROLLER_CALLHOME_PORT}
     SDN_CONTROLLER_USERNAME: ${ADMIN_USERNAME}
@@ -37,7 +37,7 @@ x-common_env: &common_env
     
     VES_COMMON_HEADER_VERSION: ${VES_COMMON_HEADER_VERSION}
     VES_ENDPOINT_PROTOCOL: ${VES_ENDPOINT_PROTOCOL}
-    VES_ENDPOINT_IP: ${VES_COLLECTOR_OAM_IPv6}
+    VES_ENDPOINT_IP: ${VES_COLLECTOR_OAM_IPv4}
     VES_ENDPOINT_PORT: ${VES_ENDPOINT_PORT}
     VES_ENDPOINT_AUTH_METHOD: ${VES_ENDPOINT_AUTH_METHOD}
     VES_ENDPOINT_USERNAME: ${VES_ENDPOINT_USERNAME}
@@ -65,7 +65,7 @@ services:
     hostname: o-eNB
     build: .
     ports:
-       - "2002:2002/tcp"
+       - "830:830/tcp"
     #command: >
     #   sh -c "route add -host 10.7.1.2 eth0; /bin/bash"
     networks:
@@ -121,9 +121,9 @@ services:
     privileged: true
 
 networks:
-  default:
-    external:
-      name: oam
+#  default:
+#    external:
+#      name: oam
   ran01:
     driver: bridge
     ipam:

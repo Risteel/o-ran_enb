@@ -300,6 +300,7 @@ ves_details_t *ves_endpoint_details_get(sr_session_ctx_t *current_session) {
         else {
             // normal addressing with IP and Port
             asprintf(&ret->url, "%s://%s:%d/eventListener/v7", ret->protocol, ret->ip, ret->port);
+            printf("%s\n", ret->url);
         }
         
     }
