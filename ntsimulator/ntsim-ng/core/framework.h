@@ -63,6 +63,9 @@
 #define ENV_VAR_VES_ENDPOINT_PASSWORD                   "VES_ENDPOINT_PASSWORD"
 #define ENV_VAR_VES_ENDPOINT_CERTIFICATE                "VES_ENDPOINT_CERTIFICATE"
 
+#define ENV_VAR_EXPORT_IPV4                             "EXPORT_IP_V4"
+#define ENV_VAR_EXPORT_IPV6                             "EXPORT_IP_V6"
+
 typedef enum {
     NTS_MODE_DEFAULT = 0,
     NTS_MODE_CONTAINER_INIT,

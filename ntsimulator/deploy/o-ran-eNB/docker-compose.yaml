@@ -42,6 +42,8 @@ x-common_env: &common_env
     VES_ENDPOINT_AUTH_METHOD: ${VES_ENDPOINT_AUTH_METHOD}
     VES_ENDPOINT_USERNAME: ${VES_ENDPOINT_USERNAME}
     VES_ENDPOINT_PASSWORD: ${VES_ENDPOINT_PASSWORD}
+    EXPORT_IP_V4: ${EXPORT_IP_V4}
+    EXPORT_IP_V6: ${EXPORT_IP_V6}
 
 x-du_env: &du_env
     NTS_NF_STANDALONE_START_FEATURES: "datastore-populate ves-heartbeat ves-file-ready ves-pnf-registration web-cut-through"
