@@ -275,10 +275,16 @@ static int framework_env_init(void) {
     framework_environment.settings.docker_engine_version = getenv(ENV_VAR_DOCKER_ENGINE_VERSION) ? strdup(getenv(ENV_VAR_DOCKER_ENGINE_VERSION)) : strdup("1.40");
     framework_environment.settings.hostname = getenv(ENV_VAR_HOSTNAME) ? strdup(getenv(ENV_VAR_HOSTNAME)) : strdup("localhost");
 
-    bool ip_ok = get_local_ips("eth0", &framework_environment.settings.ip_v4, &framework_environment.settings.ip_v6);
-    if(!ip_ok) {
+    //bool ip_ok ;//= get_local_ips("eth0", &framework_environment.settings.ip_v4, &framework_environment.settings.ip_v6);
+    framework_environment.settings.ip_v4 = getenv(ENV_VAR_EXPORT_IPV4) ? strdup(getenv(ENV_VAR_EXPORT_IPV4)) : strdup("");
+    framework_environment.settings.ip_v6 = getenv(ENV_VAR_EXPORT_IPV6) ? strdup(getenv(ENV_VAR_EXPORT_IPV6)) : strdup("");
+    if (strlen(framework_environment.settings.ip_v4) == 0 && strlen(framework_environment.settings.ip_v6) == 0) {
         log_error("[framework-env] could not get local IP addresses\n");
     }
+    printf("ipv4: %s \nipv6: %s\n", framework_environment.settings.ip_v4, framework_environment.settings.ip_v6);
+    /*if(!ip_ok) {
+        log_error("[framework-env] could not get local IP addresses\n");
+    }*/
 
     char *ipv6_env_var = getenv(ENV_VAR_IPV6ENABLED);
     if(ipv6_env_var == 0) {
