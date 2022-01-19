@@ -40,7 +40,7 @@ int faults_init(void) {
 
     faults_counters_clear();
 
-    char *config_contents = file_read_content("config/config.json");
+    char *config_contents = file_read_content("config/config_fault.json");
     rc = faults_change_settings(config_contents);
     free(config_contents);
 

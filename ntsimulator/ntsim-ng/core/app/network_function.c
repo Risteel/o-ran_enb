@@ -615,6 +615,9 @@ static int network_function_faults_change_cb(sr_session_ctx_t *session, const ch
 
     if(event == SR_EV_DONE) {
         pthread_mutex_lock(&faults_lock);
+        char *config_contents = file_read_content("config/config_fault.json");
+        rc = faults_change_settings(config_contents);
+        free(config_contents);
         rc = faults_update_config(session);
         pthread_mutex_unlock(&faults_lock);
         if(rc != NTS_ERR_OK) {
@@ -792,7 +795,14 @@ static void *faults_thread_routine(void *arg) {
 
     while(!framework_sigint) {
         pthread_mutex_lock(&faults_lock);
-        if(faults_fault_list_not_empty()) {
+        sr_val_t *val = 0;
+        bool ves_fault_enabled = false;
+        rc = sr_get_item(current_session_running, NTS_NF_VES_FAULTS_ENABLED_SCHEMA_XPATH, 0, &val);
+        if(rc == SR_ERR_OK) {
+            ves_fault_enabled = val->data.bool_val;
+            sr_free_val(val);
+        }
+        if(faults_fault_list_not_empty() && ves_fault_enabled == true) {
             uint16_t new_delay = faults_fault_list_get_next();
 
             fault_details_t *fault = faults_generate_fault();
@@ -809,9 +819,7 @@ static void *faults_thread_routine(void *arg) {
             }
             pthread_mutex_unlock(&faults_lock);
 
-            sr_val_t *val = 0;
             bool nc_fault_enabled = false;
-            bool ves_fault_enabled = false;
 
             rc = sr_get_item(current_session_running, NTS_NF_NETCONF_FAULTS_ENABLED_SCHEMA_PATH, 0, &val);
             if(rc == SR_ERR_OK) {
@@ -819,11 +827,6 @@ static void *faults_thread_routine(void *arg) {
                 sr_free_val(val);
             }
 
-            rc = sr_get_item(current_session_running, NTS_NF_VES_FAULTS_ENABLED_SCHEMA_XPATH, 0, &val);
-            if(rc == SR_ERR_OK) {
-                ves_fault_enabled = val->data.bool_val;
-                sr_free_val(val);
-            }
 
             if(nc_fault_enabled) {
                 struct lyd_node *notif = 0;

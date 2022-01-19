@@ -1,0 +1,20 @@
+{
+	"fault-rules" : {
+		"yang-notif-template" : "<alarm-notif xmlns=\"urn:o-ran:fm:1.0\"><fault-id>$$uint16_counter$$</fault-id><fault-source>%%object%%</fault-source><affected-objects><name>%%affected-object%%</name></affected-objects><fault-severity>%%fault-severity%%</fault-severity><is-cleared>%%cleared%%</is-cleared><fault-text>%%text%%</fault-text><event-time>%%date-time%%</event-time></alarm-notif>",
+		"choosing-method" : "linear",
+		"faults" : [
+			{
+				"condition" : "DoS",
+				"object" : "172.16.0.2",
+				"severity" : "MAJOR",
+				"date-time" : "$$time$$",
+				"specific-problem" : "DoS",
+
+				"fault-severity" : "MAJOR",
+				"affected-object" : "%%object%%",
+				"cleared" : "false",
+				"text" : "DoS"
+			}
+		]
+	}
+}
